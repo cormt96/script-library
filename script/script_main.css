@@ -1,0 +1,79 @@
+:root {
+    --recycled-bg: #F5F5F0;
+    --recycled-dark: #E5E5E0;
+    --recycled-darker: #D0D0CB;
+    --text-main: #404040;
+    --text-light: #606060;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+body {
+    padding: 20px;
+    background-color: var(--recycled-bg);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    position: relative;  /* 추가 */
+}
+
+.script-title {
+    text-align: center;
+    margin: 20px 0 30px;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.script-content {
+    width: 100%;
+    min-height: 500px;
+    padding: 20px;
+    margin: 0 auto;
+    border: 2px solid var(--recycled-dark);
+    border-radius: 8px;
+    background-color: var(--recycled-bg);
+    color: var(--text-main);
+    font-size: 16px;
+    line-height: 1.6;
+    resize: none;
+}
+
+.script-content:focus {
+    outline: none;
+    border-color: var(--recycled-darker);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    background-color: var(--recycled-dark);
+    border: none;
+    border-radius: 20px;
+    color: var(--text-main);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.back-button:hover {
+    background-color: var(--recycled-darker);
+    transform: translateX(-2px);
+}

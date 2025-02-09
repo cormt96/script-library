@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="../script/script_main.css">
+</head>
+<body>
+    <div class="container">
+        <button class="back-button" onclick="location.href='../index.html'">
+            ← 뒤로가기
+        </button>
+        <h1 class="script-title"></h1>
+        <textarea class="script-content" readonly></textarea>
+    </div>
+
+    <script>
+        // URL에서 title 매개변수 읽기
+        const urlParams = new URLSearchParams(window.location.search);
+        const title_en = urlParams.get('title_en');
+        const title_ko = urlParams.get('title_ko');
+        console.log(title_en, title_ko);
+
+        // txt 파일 읽기
+        fetch(`../assets/script/${title_en}.txt`)
+            .then(response => response.text())
+            .then(content => {
+                document.querySelector('.script-content').value = content;
+                document.querySelector('.script-title').textContent = title_ko;
+                document.title = title_ko;
+            })
+            .catch(error => {
+                console.error('Error loading script:', error);
+                document.querySelector('.script-content').value = '스크립트를 불러오는 중 오류가 발생했습니다.';
+            });
+    </script>
+</body>
+</html>

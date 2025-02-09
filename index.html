@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScriptLibrary</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="container">
+        <div class="title-container">
+            <h4 class="title">대본도서관</h4>
+        </div>
+        
+        <div class="search-container">
+            <div class="search-input-wrapper">
+                <input type="search" 
+                       class="search-input" 
+                       placeholder="대본 검색하기..."
+                       aria-label="대본 검색"
+                       id="searchInput">
+                </button>
+            </div>
+            
+            <div class="filter-options" id="filterOptions">
+                <div class="filter-section">
+                    <div class="filter-section-title">성별</div>
+                    <div class="filter-options-grid" data-type="gender">
+                        <label><input type="checkbox" id="gender-all" name="gender" value="all" class="select-all-gender"> 전체</label>
+                        <label><input type="checkbox" id="gender-male" name="gender" value="male" class="gender-option"> 남자</label>
+                        <label><input type="checkbox" id="gender-female" name="gender" value="female" class="gender-option"> 여자</label> 
+                    </div>
+                </div>
+                <div class="filter-section">
+                    <div class="filter-section-title">장르</div>
+                    <div class="filter-options-grid" data-type="genre">
+                        <label><input type="checkbox" id="genre-all" name="genre" value="all" class="select-all-genre"> 전체</label>
+                        <label><input type="checkbox" id="genre-drama" name="genre" value="drama" class="genre-option"> 드라마</label>
+                        <label><input type="checkbox" id="genre-movie" name="genre" value="movie" class="genre-option"> 영화</label>
+                        <label><input type="checkbox" id="genre-web" name="genre" value="web" class="genre-option"> 웹드라마</label>
+                    </div>
+                </div> 
+                <div class="filter-section">
+                    <div class="filter-section-title">연령대</div>
+                    <div class="filter-options-grid" data-type="age">
+                        <label><input type="checkbox" id="age-all" name="age" value="all" class="select-all-age"> 전체</label>
+                        <label><input type="checkbox" id="age-10-20" name="age" value="10-20" class="age-option"> 10대~20대</label>
+                        <label><input type="checkbox" id="age-20-30" name="age" value="20-30" class="age-option"> 20대~30대</label>
+                        <label><input type="checkbox" id="age-30-40" name="age" value="30-40" class="age-option"> 30대~40대</label>
+                        <label><input type="checkbox" id="age-40-50" name="age" value="40-50" class="age-option"> 40대~50대</label>
+                        <label><input type="checkbox" id="age-50-60" name="age" value="50-60" class="age-option"> 50대~60대</label>
+                        <label><input type="checkbox" id="age-60plus" name="age" value="60plus" class="age-option"> 60대 이상</label>
+                    </div>
+                </div> 
+  
+                <div class="selected-filters">
+                    <div class="selected-filters-title">선택된 필터</div>
+                    <div class="selected-tags" id="selectedTags">
+                    </div>    <!-- Tags will be dynamically added here -->
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="scripts-grid">
+            
+            <!-- Add more script items with the same structure -->
+            <!-- 여러 개의 script-item을 복사하여 그리드 채우기 -->
+        </div>
+    </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeFilters();
+             // 작품 목록
+             const script_list = [
+                {
+                    title_en : "D.P.",
+                    title_ko : "D.P. - 한호열 역(구교환)",
+                    gender_en : "male",
+                    gender_ko : "남자",
+                    character_en : "comic,solider",
+                    character_ko : "코믹,군인",
+                    genre_en : "drama",
+                    genre_ko : "드라마",
+                    age : "20-30"
+                },
+                {
+                    title_en : "sweet",
+                    title_ko : "달콤 살벌한 연인 - 황대우 역(박용우)",
+                    gender_en : "male",
+                    gender_ko : "남자",
+                    character_en : "comic,worker",
+                    character_ko : "코믹,회사원",
+                    genre_en : "movie",
+                    genre_ko : "영화",
+                    age : "30-40"
+                },
+                {
+                    title_en : "20",
+                    title_ko : "스물 - 치호 역(김우빈)",
+                    gender_en : "male",
+                    gender_ko : "남자",
+                    character_en : "comic",
+                    character_ko : "코믹",
+                    genre_en : "movie",
+                    genre_ko : "영화",
+                    age : "20-30"
+                },
+                {
+                    title_en : "bullhandang",
+                    title_ko : "불한당 - 고병갑 역(김희원)",
+                    gender_en : "male",
+                    gender_ko : "남자",
+                    character_en : "gangter",
+                    character_ko : "건달",
+                    genre_en : "movie",
+                    genre_ko : "영화",
+                    age : "30-40"
+                },
+                {
+                    title_en : "chaser",
+                    title_ko : "추격자 - 지영민 역(하정우)",
+                    gender_en : "male",
+                    gender_ko : "남자",
+                    character_en : "murderer,psychopath",
+                    character_ko : "살인자,사이코패스",
+                    genre_en : "movie",
+                    genre_ko : "영화",
+                    age : "20-30"
+                },
+                {
+                    title_en : "jungjeong",
+                    title_ko : "중증외상센터 - 양재원 역(추영우)",
+                    gender_en : "male",
+                    gender_ko : "남자",
+                    character_en : "doctor",
+                    character_ko : "의사",
+                    genre_en : "drama",
+                    genre_ko : "드라마",
+                    age : "20-30"
+                },
+                {
+                    title_en : "beterang2",
+                    title_ko : "베테랑2 - 박선우 역(정해인)",
+                    gender_en : "male",
+                    gender_ko : "남자",
+                    character_en : "detective",
+                    character_ko : "형사",
+                    genre_en : "movie",
+                    genre_ko : "영화",
+                    age : "20-30"
+                },
+                {
+                    title_en: "movingheaven",
+                    title_ko: "무빙 - 이미현 역(한효주)",
+                    gender_en: "female",
+                    gender_ko: "여자",
+                    character_en: "mother",
+                    character_ko: "어머니",
+                    genre_en: "drama",
+                    genre_ko: "드라마",
+                    age : "30-40"
+                },
+                {
+                    title_en: "roundsix",
+                    title_ko: "오징어게임 - 성기훈 역(이정재)",
+                    gender_en: "male",
+                    gender_ko: "남자",
+                    character_en: "player",
+                    character_ko: "참가자",
+                    genre_en: "drama",
+                    genre_ko: "드라마",
+                    age : "40-50"
+                },
+                {
+                    title_en: "concreteutopia",
+                    title_ko: "콘크리트 유토피아 - 영탁 역(이병헌)",
+                    gender_en: "male",
+                    gender_ko: "남자",
+                    character_en: "resident",
+                    character_ko: "주민",
+                    genre_en: "movie",
+                    genre_ko: "영화",
+                    age : "30-40"
+                },
+                {
+                    title_en: "die",
+                    title_ko: "이재, 곧 죽습니다 - 최이재 역(서인국)",
+                    gender_en: "male",
+                    gender_ko: "남자",
+                    character_en: "dying",
+                    character_ko: "죽음",
+                    genre_en: "drama",
+                    genre_ko: "드라마",
+                    age : "20-30"
+                },
+                {
+                    title_en: "myname",
+                    title_ko: "마이네임 - 지우 역(한소희)",
+                    gender_en: "female",
+                    gender_ko: "여자",
+                    character_en: "detective",
+                    character_ko: "형사",
+                    genre_en: "drama",
+                    genre_ko: "드라마",
+                    age : "20-30"
+                },
+                {
+                    title_en: "alienoid",
+                    title_ko: "외계+인 - 청운 역(조우진)",
+                    gender_en: "male",
+                    gender_ko: "남자",
+                    character_en: "alien",
+                    character_ko: "도사",
+                    genre_en: "movie",
+                    genre_ko: "영화",
+                    age : "40-50"
+                },
+                {
+                    title_en: "queenmaker",
+                    title_ko: "퀸메이커 - 황도희 역(김희애)",
+                    gender_en: "female",
+                    gender_ko: "여자",
+                    character_en: "strategist",
+                    character_ko: "전략가",
+                    genre_en: "drama",
+                    genre_ko: "드라마",
+                    age : "40-50"
+                },
+                {
+                    title_en: "badland",
+                    title_ko: "황야 - 양기수 역이희준)",
+                    gender_en: "male",
+                    gender_ko: "남자",
+                    character_en: "doctor",
+                    character_ko: "의사",
+                    genre_en: "movie",
+                    genre_ko: "영화",
+                    age : "30-40"
+                },
+                {
+                    title_en: "signal",
+                    title_ko: "시그널 - 박해영 역(이제훈)",
+                    gender_en: "male",
+                    gender_ko: "남자",
+                    character_en: "detective",
+                    character_ko: "형사",
+                    genre_en: "drama",
+                    genre_ko: "드라마",
+                    age : "20-30"
+                },
+                {
+                    title_en: "escape",
+                    title_ko: "탈주 - 리현상 역(구교환)",
+                    gender_en: "male",
+                    gender_ko: "남자",
+                    character_en: "soldier , northkorea",
+                    character_ko: "군인 , 북한",
+                    genre_en: "movie",
+                    genre_ko: "영화",
+                    age : "20-30"
+                },
+                {
+                    title_en: "hospitalmorning",
+                    title_ko: "정신병동에도 아침이 와요 - 정다은 역(박보영)",
+                    gender_en: "female",
+                    gender_ko: "여자",
+                    character_en: "patient , nurse",
+                    character_ko: "환자 , 간호사",
+                    genre_en: "drama",
+                    genre_ko: "드라마",
+                    age : "20-30"
+                },
+                {
+                    title_en: "doubtful",
+                    title_ko: "신과함께<죄와벌> - 김수홍 역(김동욱)",
+                    gender_en: "male",
+                    gender_ko: "남자",
+                    character_en: "soldier",
+                    character_ko: "군인",
+                    genre_en: "movie",
+                    genre_ko: "영화",
+                    age : "20-30"
+                },
+                {
+                    title_en: "1win",
+                    title_ko: "1승 - 강정원 역(박정민)",
+                    gender_en: "male",
+                    gender_ko: "남자",
+                    character_en: "gamer",
+                    character_ko: "감독",
+                    genre_en: "movie",
+                    genre_ko: "영화",
+                    age : "30-40"
+                },
+                {
+                    title_en: "jump",
+                    title_ko: "번지점프를 하다 - 서인우 역(이병헌)",
+                    gender_en: "male",
+                    gender_ko: "남자",
+                    character_en: "teacher",
+                    character_ko: "선생님",
+                    genre_en: "movie",
+                    genre_ko: "영화",
+                    age : "30-40"
+                },
+                {
+                    title_en: "rebound",
+                    title_ko: "리바운드 - 강양현 역(안재홍)",
+                    gender_en: "male",
+                    gender_ko: "남자",
+                    character_en: "coach , gyeongsangdo , dialect",
+                    character_ko: "코치 , 경상도 , 사투리",
+                    genre_en: "movie",
+                    genre_ko: "영화",
+                    age : "30-40"
+                },
+                {
+                    title_en: "stranger",
+                    title_ko: "이상한 나라의 수학자 - 이학성 역(최민식)",
+                    gender_en: "male",
+                    gender_ko: "남자",
+                    character_en: "teacher , northkorea , dialect",
+                    character_ko: "선생님 , 북한 , 사투리",
+                    genre_en: "movie",
+                    genre_ko: "영화",
+                    age : "40-50 , 50-60"
+                },
+                {
+                    title_en: "squad",
+                    title_ko: "중증외상센터 - 천장미 역(하영)",
+                    gender_en: "female",
+                    gender_ko: "여자",
+                    character_en: "nurse",
+                    character_ko: "간호사",
+                    genre_en: "drama",
+                    genre_ko: "드라마",
+                    age : "20-30"
+                },
+                {
+                    title_en: "hatekorea",
+                    title_ko: "한국이 싫어서 - 주계나 역(고아성)",
+                    gender_en: "female",
+                    gender_ko: "여자",
+                    character_en: "student , girlfriend , lover",
+                    character_ko: "학생 , 여자친구 , 연인",
+                    genre_en: "movie",
+                    genre_ko: "영화",
+                    age : "20-30"
+                },
+                {
+                    title_en: "may",
+                    title_ko: "오월의 청춘 - 김명희 역(고민시)",
+                    gender_en: "female",
+                    gender_ko: "여자",
+                    character_en: "student , jeolla , dialect",
+                    character_ko: "학생 , 전라도 , 사투리",
+                    genre_en: "drama",
+                    genre_ko: "드라마",
+                    age : "20-30"
+                },
+                
+            ];
+
+            function initializeFilters() {
+                // 필터 그리드 이벤트 위임
+                document.querySelectorAll('.filter-options-grid').forEach(grid => {
+                    grid.removeEventListener('change', filterEventHandler); // 이전 이벤트 제거
+                    grid.addEventListener('change', filterEventHandler);
+                });
+
+                // 검색 입력 이벤트
+                const searchInput = document.getElementById('searchInput');
+                searchInput.removeEventListener('input', filterScripts); // 이전 이벤트 제거
+                searchInput.addEventListener('input', filterScripts);
+                searchInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') filterScripts();
+                });
+            }
+
+            function filterEventHandler(event) {
+                const input = event.target;
+                if (!input.matches('input[type="checkbox"]')) return;
+
+                const grid = event.currentTarget;
+                const isAllCheckbox = input.value === 'all';
+                const category = input.name;
+                const options = grid.querySelectorAll(`input[name="${category}"]:not([value="all"])`);
+                const allCheckbox = grid.querySelector(`input[value="all"]`);
+
+                if (isAllCheckbox) {
+                    options.forEach(option => option.checked = input.checked);
+                } else {
+                    const allChecked = Array.from(options).every(opt => opt.checked);
+                    if (allCheckbox) allCheckbox.checked = allChecked;
+                }
+
+                filterScripts();
+            }
+            // scripts-grid에 스크립트 아이템 추가
+            const scriptsGrid = document.querySelector('.scripts-grid');
+            script_list.forEach((script, index) => {
+                const scriptItem = document.createElement('a');
+                scriptItem.className = 'script-item';
+                scriptItem.setAttribute('data-gender', script.gender_en);
+                scriptItem.setAttribute('data-genre', script.genre_en);
+                scriptItem.setAttribute('data-age', script. age);
+                scriptItem.href = `./script/script_main.html?title_en=${script.title_en}&title_ko=${script.title_ko}`;
+                scriptItem.innerHTML = `
+                    <div class="script-info">
+                        <h3 class="script-title">${script.title_ko}</h3>
+                        <div class="script-metadata">
+                            <p>
+                                <span class="sub-title">성별</span>
+                                <span>${script.gender_ko}</span>
+                            </p>
+                            <p>
+                                <span class="sub-title">장르</span>
+                                <span>${script.genre_ko}</span>
+                            </p>
+                            <p>
+                                <span class="sub-title">연령대</span>
+                                <span>${script.age}</span>
+                            </p>
+                        </div>
+                        <div class="script-tags">
+                        </div>
+                    </div>
+                `;
+                scriptsGrid.appendChild(scriptItem);
+            });
+
+            function updateSelectedFilters() {
+                const selectedTags = document.getElementById('selectedTags');
+                selectedTags.innerHTML = '';
+                
+                // 카테고리별로 선택된 값을 저장할 객체
+                const selectedFilters = {};
+                
+                // 각 필터 섹션 순회
+                document.querySelectorAll('.filter-options-grid').forEach(grid => {
+                    const filterType = grid.dataset.type; // gender, genre, age
+                    selectedFilters[filterType] = [];
+
+                    // 전체 체크박스가 선택되었는지 확인
+                    const allCheckbox = grid.querySelector(`input[value="all"]`);
+                    const isAllSelected = allCheckbox?.checked;
+
+                    if (isAllSelected) {
+                        // 전체가 선택된 경우 모든 자식 옵션의 value 값을 배열에 추가
+                        grid.querySelectorAll(`input:not([value="all"])`).forEach(input => {
+                            selectedFilters[filterType].push(input.value);
+                        });
+                    } else {
+                        // 개별 선택된 옵션들의 value 값만 추가
+                        grid.querySelectorAll('input:checked:not([value="all"])').forEach(input => {
+                            selectedFilters[filterType].push(input.value);
+                        });
+                    }
+                });
+
+
+                // 선택된 필터 태그 표시
+                Object.entries(selectedFilters).forEach(([category, values]) => {
+                    values.forEach(value => {
+                        const input = document.querySelector(`input[name="${category}"][value="${value}"]`);
+                        if (!input) return;
+
+                        const tag = document.createElement('div');
+                        tag.className = 'filter-tag';
+                        
+                        const label = input.closest('label').textContent.trim();
+                        const inputId = input.id;
+                        
+                        tag.innerHTML = `
+                            ${label}
+                            <button onclick="removeFilter('${inputId}')" aria-label="Remove filter">×</button>
+                        `;
+                        selectedTags.appendChild(tag);
+                    });
+                });
+                return selectedFilters;
+            }
+
+            function removeFilter(inputId) {
+                const input = document.getElementById(inputId);
+                if (input) {
+                    input.checked = false;
+                    
+                    // 해당 카테고리의 다른 옵션들 확인
+                    const category = input.name;
+                    const options = document.querySelectorAll(`input[name="${category}"]:not([value="all"])`);
+                    const allChecked = Array.from(options).every(opt => opt.checked);
+                    
+                    // 전체 선택 체크박스 상태 업데이트
+                    const allCheckbox = document.querySelector(`input[name="${category}"][value="all"]`);
+                    if (allCheckbox) {
+                        allCheckbox.checked = allChecked;
+                    }
+
+                    updateSelectedFilters();
+                    filterScripts();
+                }
+            }
+
+            function filterScripts() {
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                const selectedFilters = updateSelectedFilters();
+                const scriptItems = document.querySelectorAll('.script-item');
+                
+                scriptItems.forEach(item => {
+                    const shouldShow = checkScriptVisibility(item, searchTerm, selectedFilters);
+                    item.style.display = shouldShow ? 'block' : 'none';
+                });
+            }
+
+            function checkScriptVisibility(item, searchTerm, selectedFilters) {
+    const metadataText = item.textContent.toLowerCase();
+    const searchMatch = searchTerm === '' || metadataText.includes(searchTerm);
+    
+    if (!searchMatch) return false;
+
+    return Object.entries(selectedFilters).every(([category, values]) => {
+        if (values.length === 0) return true;
+
+        switch(category) {
+            case 'character':
+                const characterData = (item.getAttribute('data-characters') || '').split(',');
+                return values.some(value => 
+                    characterData.includes(value.toLowerCase())
+                );
+            case 'gender':
+            case 'genre':
+                const dataAttribute = `data-${category}`.toLowerCase();
+                const itemValue = item.getAttribute(dataAttribute)?.toLowerCase() || '';
+                return values.some(value => 
+                    itemValue === value.toLowerCase() || 
+                    metadataText.includes(value.toLowerCase())
+                );
+            case 'age':
+                const ageValue = item.getAttribute('data-age')?.toLowerCase() || '';
+                return values.includes('all') || values.some(value => 
+                    ageValue === value.toLowerCase()
+                );
+            default:
+                return true;
+        }
+    });
+}
+            // Enter 키로도 검색 가능하게
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    filterScripts();
+                }
+            });
+        });
+    </script>
+
+</div>
+</body>
+</html>
